@@ -1,93 +1,120 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {AgGridReact} from 'ag-grid-react';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import React, {useState, useEffect} from 'react';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+import Button from 'react-bootstrap/Button';
+import {Trash} from 'react-bootstrap-icons';
 
-export default function Customers() {
+import Addcustomer from './Addcustomer';
+import Editcustomer from './Editcustomer';
+
+const Customers = () => {
 
     const [customers, setCustomers] = useState([]);
-    const gridRef = useRef();
+    const api_customers = 'https://customerrest.herokuapp.com/api/customers';
 
     useEffect(() => {
         fetchCustomers();
     }, [])
 
     const fetchCustomers = () => {
-        fetch('https://customerrest.herokuapp.com/api/customers')
+        fetch(api_customers)
         .then(response => response.json())
         .then(data => setCustomers(data.content))
         .catch(err => console.error(err))
     }
 
-     const columns = [
+    const newCustomer = (customer) => {
+        fetch(api_customers, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(customer)
+            })
+        .then(res => fetchCustomers())
+        .catch(err => console.error(err))
+    }
+
+    const updateCustomer = (customer, link) => {
+        fetch(link, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(customer)
+        })
+    .then(res => fetchCustomers())
+    .catch(err => console.error(err))
+    }
+
+    const deleteCustomer = (link) => {
+        fetch(link, {method: 'DELETE'})
+        .then(res => fetchCustomers())
+        .catch(err => console.error(err))
+    }
+
+    const columns = [
         {
-            headerName: 'First name',
-            field: 'firstname',
-            sortable: true,
-            filter: true,
-            floatingFilter: true,
-            sort: 'asc'
+            Header: '',
+            accessor: '',
+            width: 110,
+            sortable: false,
+            filterable: false,
+            Cell: row => 
+            <Button variant='outline-success' size='sm'>Add training</Button>
         },
         {
-            headerName: 'Last name',
-            field: 'lastname',
-            sortable: true,
-            filter: true,
-            floatingFilter: true
+            Header: 'First name',
+            accessor: 'firstname'
         },
         {
-            headerName: 'Street address',
-            field: 'streetaddress',
-            sortable: true,
-            filter: true,
-            floatingFilter: true
+            Header: 'Last name',
+            accessor: 'lastname'
         },
         {
-            headerName: 'Post code',
-            field: 'postcode',
-            sortable: true,
-            filter: true,
-            floatingFilter: true
+            Header: 'Street address',
+            accessor: 'streetaddress'
         },
         {
-            headerName: 'City',
-            field: 'city',
-            sortable: true,
-            filter: true,
-            floatingFilter: true
+            Header: 'Post code',
+            accessor: 'postcode'
         },
         {
-            headerName: 'Email',
-            field: 'email',
-            sortable: true,
-            filter: true,
-            floatingFilter: true
+            Header: 'City',
+            accessor: 'city'
         },
         {
-            headerName: 'Phone',
-            field: 'phone',
-            sortable: true,
-            filter: true,
-            floatingFilter: true
+            Header: 'Email',
+            accessor: 'email'
         },
+        {
+            Header: 'Phone',
+            accessor: 'phone'
+        },
+        {
+            Header: '',
+            accessor: '',
+            width: 80,
+            sortable: false,
+            filterable: false,
+            Cell: row => 
+                <Editcustomer updateCustomer={updateCustomer} customer={row.original} />
+        },
+        {
+            Header: '',
+            accessor: 'links[0].href',
+            width: 80,
+            sortable: false,
+            filterable: false,
+            Cell: row =>
+                <Button onClick={() => deleteCustomer(row.value)} variant='outline-light'> <Trash color='red' size={20} /></Button>
+        }
+
     ]
- 
 
     return (
-        <div className="ag-theme-alpine" style={{height: '600px', width: '100%'}}>
-            <AgGridReact 
-                columnDefs={columns} 
-                rowData={customers}
-                ref={gridRef}
-                onGridReady={params => { 
-                    gridRef.current = params.api;
-                    params.api.sizeColumnsToFit();
-                }}
-                pagination={true}
-                paginationAutoPageSize={true} 
-                animateRows={true} >
-            </AgGridReact>
-      </div>
+        <div>
+            <Addcustomer newCustomer={newCustomer} />
+            <ReactTable data={customers} columns={columns} filterable={true} />  
+        </div>
     );
 
-}
+};
+
+export default Customers;
