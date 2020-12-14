@@ -5,6 +5,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from  '@material-ui/core/Typography';
+import 'fontsource-roboto';
 import Button from 'react-bootstrap/Button';
 import {Pencil} from 'react-bootstrap-icons';
 
@@ -23,6 +25,7 @@ export default function Addcustomer(props) {
       setOpen(false);
     }
 
+    // props from newCustomer function on customer list page
     const addCustomer = () => {
         props.newCustomer(customer);
         handleClose();
@@ -39,9 +42,11 @@ export default function Addcustomer(props) {
             <Button style={{marginTop: 12, marginLeft: 30}} variant='warning' onClick={handleOpen}><Pencil /> Add customer</Button>
         </div>
         <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
-            <DialogTitle id='form-dialog-title'>Add customer</DialogTitle>
+            <DialogTitle id='form-dialog-title'>
+                <Typography variant='h5' align='center'>Add new customer</Typography>
+            </DialogTitle>
             <DialogContentText>
-                Please fill in new customer information below.
+                <Typography align='center'>Please fill in new customer information below.</Typography>
             </DialogContentText>
             <DialogContent>
                 <TextField autoFocus fullWidth margin='dense' name='firstname' value={customer.firstname} label='First name: '

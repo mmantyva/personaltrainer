@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Calendar, momentLocalizer} from 'react-big-calendar';
 import moment from 'moment';
+import 'moment/locale/en-gb';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 
@@ -9,12 +10,7 @@ const CalendarView = () => {
     const [trainings, setTrainings] = useState([]);
     const get_url = 'https://customerrest.herokuapp.com/gettrainings/';
     const localizer = momentLocalizer(moment);
-    moment.locale('en-gb', {
-        week: {
-            dow: 1,
-            doy: 1,
-        },
-    });
+    moment.locale('en-gb', {week: {dow: 1, doy: 1,}});
 
     useEffect(() => {
         fetchTrainings();
@@ -29,13 +25,12 @@ const CalendarView = () => {
 
     const events = trainings.map(training => {
         let date = new Date(training.date)
-        
         const appts = {
-            title: training.activity + ' (' + training.customer.firstname + ' ' + training.customer.lastname + '), ' + training.duration + ' minutes',
+            title: training.activity + ' (' + training.customer.firstname + ' ' +
+            training.customer.lastname + '), ' + training.duration + ' minutes',
             start: date,
             end: new Date(moment(date).add('minutes', training.duration)),
         }
-  
         return appts
     }) 
   
@@ -49,7 +44,6 @@ const CalendarView = () => {
         style={{height: 600, margin: 50}}
       />
     )
-
 }
 
 export default CalendarView;

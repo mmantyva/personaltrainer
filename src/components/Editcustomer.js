@@ -5,6 +5,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@material-ui/core/Typography';
+import 'fontsource-roboto';
 import Button from 'react-bootstrap/Button';
 
 export default function Editcustomer(props) {
@@ -40,9 +42,11 @@ export default function Editcustomer(props) {
     <div>
         <Button onClick={handleOpen} variant='outline-info' size='sm'>Edit</Button>
         <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
-            <DialogTitle id='form-dialog-title'>Edit customer</DialogTitle>
+        <DialogTitle id='form-dialog-title'>
+                <Typography variant='h5' align='center'>Edit customer information</Typography>
+            </DialogTitle>
             <DialogContentText>
-                Please update the customer information below.
+                <Typography align='center'>Edit customer details below.</Typography>
             </DialogContentText>
             <DialogContent>
                 <TextField autoFocus fullWidth margin='dense' name='firstname' value={customer.firstname} label='First name: '

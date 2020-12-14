@@ -8,6 +8,7 @@ import Addcustomer from './Addcustomer';
 import Editcustomer from './Editcustomer';
 import Addtraining from './Addtraining';
 
+
 const Customers = () => {
 
     const [customers, setCustomers] = useState([]);
@@ -18,6 +19,7 @@ const Customers = () => {
         fetchCustomers();
     }, [])
 
+    // fetch customer list from database
     const fetchCustomers = () => {
         fetch(api_customers)
         .then(response => response.json())
@@ -25,6 +27,7 @@ const Customers = () => {
         .catch(err => console.error(err))
         }
 
+    // POST new customer info
     const newCustomer = (customer) => {
         fetch(api_customers, {
             method: 'POST',
@@ -35,16 +38,18 @@ const Customers = () => {
         .catch(err => console.error(err))
     }
 
+    // PUT edited customer info
     const updateCustomer = (customer, link) => {
         fetch(link, {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(customer)
-        })
-    .then(res => fetchCustomers())
-    .catch(err => console.error(err))
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(customer)
+            })
+        .then(res => fetchCustomers())
+        .catch(err => console.error(err))
     }
 
+    // DELETE customer by id
     const deleteCustomer = (link) => {
         if (window.confirm("Are you sure you want to delete this customer?")) {
             fetch(link, {method: 'DELETE'})
@@ -53,6 +58,7 @@ const Customers = () => {
         }
     }
 
+    // POST new training info
     const newTraining = (training) => {
         fetch(api_trainings, {
             method: 'POST',
@@ -62,77 +68,55 @@ const Customers = () => {
         .catch(err => console.error(err))
     }
 
+    // function for making the table filtering case insensitive, improves functionality by a ton
     const caseInsensitive = ({id, value}, row) =>
         row[id]?row[id].toLowerCase().includes(value.toLowerCase()): true
 
     const columns = [
         {
-            Header: '',
-            accessor: 'links[2].href',
-            width: 110,
-            sortable: false,
-            filterable: false,
-            Cell: train => 
-                <Addtraining newTraining={newTraining} trainingCustomer={train.original} />  
+            Header: '', accessor: 'links[0].href', width: 110, sortable: false, filterable: false,
+        Cell: appt => <Addtraining newTraining={newTraining} trainingCustomer={appt.original} />
         },
         {
-            Header: 'First name',
-            accessor: 'firstname'
+            Header: 'First name', accessor: 'firstname'
         },
         {
-            Header: 'Last name',
-            accessor: 'lastname'
+            Header: 'Last name', accessor: 'lastname'
         },
         {
-            Header: 'Street address',
-            accessor: 'streetaddress'
+            Header: 'Street address', accessor: 'streetaddress'
         },
         {
-            Header: 'Post code',
-            accessor: 'postcode'
+            Header: 'Post code', accessor: 'postcode'
         },
         {
-            Header: 'City',
-            accessor: 'city'
+            Header: 'City', accessor: 'city'
         },
         {
-            Header: 'Email',
-            accessor: 'email'
+            Header: 'Email', accessor: 'email'
         },
         {
-            Header: 'Phone',
-            accessor: 'phone'
+            Header: 'Phone', accessor: 'phone'
         },
         {
-            Header: '',
-            accessor: '',
-            width: 70,
-            sortable: false,
-            filterable: false,
-            Cell: row => 
-                <Editcustomer updateCustomer={updateCustomer} customer={row.original} />
+            Header: '', accessor: '', width: 70, sortable: false, filterable: false,
+            Cell: row => <Editcustomer updateCustomer={updateCustomer} customer={row.original} />
         },
         {
-            Header: '',
-            accessor: 'links[0].href',
-            width: 70,
-            sortable: false,
-            filterable: false,
-            Cell: row =>
-                <Button onClick={() => deleteCustomer(row.value)} variant='outline-light'><Trash color='red' size={20} /></Button>
+            Header: '', accessor: 'links[0].href', width: 70, sortable: false, filterable: false,
+            Cell: row => <Button onClick={() => deleteCustomer(row.value)} variant='outline-light'>
+            <Trash color='red' size={20} /></Button>
         }
-
     ]
 
     return (
         <div>
             <Addcustomer newCustomer={newCustomer} />
-            <ReactTable data={customers} columns={columns} filterable={true}
+            <ReactTable data={customers} columns={columns} filterable={true} defaultPageSize={20}
             defaultFilterMethod={caseInsensitive} style={{margin: 30, marginTop: 10}}
             />  
         </div>
-    );
-
-};
+    )
+}
 
 export default Customers;

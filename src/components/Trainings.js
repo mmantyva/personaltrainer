@@ -36,50 +36,33 @@ const Trainings = () => {
 
     const columns = [
         {
-            Header: 'Customer',
-            id: 'fullname',
-            accessor: name => {
-                return name.customer.firstname + ' ' + name.customer.lastname
-            }
+            Header: 'Customer', id: 'fullname',
+            accessor: name => {return name.customer.firstname + ' ' + name.customer.lastname}
         },
         {
-            Header: 'Date',
-            id: 'localiseddate',
-            accessor: local => {
-                return moment(local.date).format('DD.MM.YYYY, HH:mm')
-            }
+            Header: 'Activity', accessor: 'activity'
         },
         {
-            Header: 'Duration',
-            id: 'minutes',
-            accessor: minutes => {
-                return minutes.duration + ' minutes'
-            }
+            Header: 'Duration', id: 'minutes',
+            accessor: minutes => {return minutes.duration + ' minutes'}
         },
         {
-            Header: 'Activity',
-            accessor: 'activity'
+            Header: 'Date', id: 'localiseddate',
+            accessor: local => {return moment(local.date).format('DD.MM.YYYY, HH:mm')}
         },
         {
-            Header: '',
-            accessor: 'id',
-            width: 80,
-            sortable: false,
-            filterable: false,
-            Cell: row => 
-                <Button onClick={() => deleteTraining(row.value)} variant='outline-light'> <Trash color='red' size={20} /></Button>
-
-        }
+            Header: '', accessor: 'id', width: 80, sortable: false, filterable: false,
+            Cell: row => <Button onClick={() => deleteTraining(row.value)} variant='outline-light'>
+            <Trash color='red' size={20} /></Button>}
     ]
 
     return (
         <div>
-            <ReactTable data={trainings} columns={columns} filterable={true}
+            <ReactTable data={trainings} columns={columns} filterable={true} defaultPageSize={20}
             defaultFilterMethod={caseInsensitive} style={{margin: 30, marginTop: 60}}
             />  
         </div>
-    );
-
-};
+    )
+}
 
 export default Trainings;
