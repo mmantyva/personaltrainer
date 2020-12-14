@@ -36,7 +36,7 @@ export default function Addcustomer(props) {
         
     <div>
         <div style={{display: 'flex'}}>
-            <Button style={{margin: 15}} variant='warning' onClick={handleOpen}><Pencil /> Add customer</Button>
+            <Button style={{marginTop: 12, marginLeft: 30}} variant='warning' onClick={handleOpen}><Pencil /> Add customer</Button>
         </div>
         <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
             <DialogTitle id='form-dialog-title'>Add customer</DialogTitle>

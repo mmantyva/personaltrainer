@@ -23,12 +23,14 @@ const Trainings = () => {
         .catch(err => console.error(err))
     }
 
-    const deleteTraining = link => {
-        console.log(link);
-        fetch(api_url + link, {method: 'DELETE'})
+    const deleteTraining = id => {
+        fetch(api_url + id, {method: 'DELETE'})
         .then(res => fetchTrainings())
         .catch(err => console.error(err))
     }
+
+    const caseInsensitive = ({id, value}, row) =>
+        row[id]?row[id].toLowerCase().includes(value.toLowerCase()): true
 
     const columns = [
         {
@@ -58,7 +60,7 @@ const Trainings = () => {
         },
         {
             Header: '',
-            accessor: '',
+            accessor: 'id',
             width: 80,
             sortable: false,
             filterable: false,
@@ -70,7 +72,9 @@ const Trainings = () => {
 
     return (
         <div>
-            <ReactTable data={trainings} columns={columns} filterable={true} />  
+            <ReactTable data={trainings} columns={columns} filterable={true}
+            defaultFilterMethod={caseInsensitive} style={{margin: 30, marginTop: 60}}
+            />  
         </div>
     );
 

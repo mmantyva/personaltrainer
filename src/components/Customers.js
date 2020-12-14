@@ -6,11 +6,13 @@ import {Trash} from 'react-bootstrap-icons';
 
 import Addcustomer from './Addcustomer';
 import Editcustomer from './Editcustomer';
+import Addtraining from './Addtraining';
 
 const Customers = () => {
 
     const [customers, setCustomers] = useState([]);
-    const api_customers = 'https://customerrest.herokuapp.com/api/customers';
+    const api_customers = 'https://customerrest.herokuapp.com/api/customers/';
+    const api_trainings = 'https://customerrest.herokuapp.com/api/trainings/';
 
     useEffect(() => {
         fetchCustomers();
@@ -21,7 +23,7 @@ const Customers = () => {
         .then(response => response.json())
         .then(data => setCustomers(data.content))
         .catch(err => console.error(err))
-    }
+        }
 
     const newCustomer = (customer) => {
         fetch(api_customers, {
@@ -45,19 +47,31 @@ const Customers = () => {
 
     const deleteCustomer = (link) => {
         fetch(link, {method: 'DELETE'})
-        .then(res => fetchCustomers())
+    .then(res => fetchCustomers())
+    .catch(err => console.error(err))
+    }
+
+    const newTraining = (training) => {
+        fetch(api_trainings, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(training)
+        })
         .catch(err => console.error(err))
     }
+
+    const caseInsensitive = ({id, value}, row) =>
+        row[id]?row[id].toLowerCase().includes(value.toLowerCase()): true
 
     const columns = [
         {
             Header: '',
-            accessor: '',
+            accessor: 'links[2].href',
             width: 110,
             sortable: false,
             filterable: false,
-            Cell: row => 
-            <Button variant='outline-success' size='sm'>Add training</Button>
+            Cell: train => 
+                <Addtraining newTraining={newTraining} trainingCustomer={train.original} />  
         },
         {
             Header: 'First name',
@@ -90,7 +104,7 @@ const Customers = () => {
         {
             Header: '',
             accessor: '',
-            width: 80,
+            width: 70,
             sortable: false,
             filterable: false,
             Cell: row => 
@@ -99,11 +113,11 @@ const Customers = () => {
         {
             Header: '',
             accessor: 'links[0].href',
-            width: 80,
+            width: 70,
             sortable: false,
             filterable: false,
             Cell: row =>
-                <Button onClick={() => deleteCustomer(row.value)} variant='outline-light'> <Trash color='red' size={20} /></Button>
+                <Button onClick={() => deleteCustomer(row.value)} variant='outline-light'><Trash color='red' size={20} /></Button>
         }
 
     ]
@@ -111,7 +125,9 @@ const Customers = () => {
     return (
         <div>
             <Addcustomer newCustomer={newCustomer} />
-            <ReactTable data={customers} columns={columns} filterable={true} />  
+            <ReactTable data={customers} columns={columns} filterable={true}
+            defaultFilterMethod={caseInsensitive} style={{margin: 30, marginTop: 10}}
+            />  
         </div>
     );
 
