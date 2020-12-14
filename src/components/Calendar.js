@@ -9,7 +9,7 @@ const CalendarView = () => {
     const [trainings, setTrainings] = useState([]);
     const get_url = 'https://customerrest.herokuapp.com/gettrainings/';
     const localizer = momentLocalizer(moment);
-    moment.locale('en', {
+    moment.locale('en-gb', {
         week: {
             dow: 1,
             doy: 1,
@@ -31,7 +31,7 @@ const CalendarView = () => {
         let date = new Date(training.date)
         
         const appts = {
-            title: training.activity + ' (' + training.customer.firstname + ' ' + training.customer.lastname + ')',
+            title: training.activity + ' (' + training.customer.firstname + ' ' + training.customer.lastname + '), ' + training.duration + ' minutes',
             start: date,
             end: new Date(moment(date).add('minutes', training.duration)),
         }

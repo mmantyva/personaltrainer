@@ -12,12 +12,13 @@ import MomentUtils from '@date-io/moment';
 export default function Addtraining(props) {
     
     const [training, setTraining] = React.useState(
-    {date: '', activity: '', duration: ''});
+    {date: '', activity: '', duration: '', customer: ''});
 
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = () => {
-      setOpen(true);
+        console.log(props.trainingCustomer)
+        setOpen(true);
     }
   
     const handleClose = () => {
@@ -26,7 +27,7 @@ export default function Addtraining(props) {
 
     const addTraining = () => {
         console.log(training);
-        props.newTraining(training);
+        props.newTraining({...training, customer: props.trainingCustomer.links[0].href});
         handleClose();
     }
 
@@ -34,13 +35,6 @@ export default function Addtraining(props) {
         setTraining({...training, [e.target.name]: e.target.value})
     }
 
-/*     const [selectedDate, setSelectedDate] = useState(new Date());
-
-    const handleDateChange = (date) => {
-        console.log(date);
-        setSelectedDate(date);
-  };
- */
     return (   
     <div>
         <Button onClick={handleOpen} variant='outline-success' size='sm'>Add training</Button>
@@ -53,13 +47,9 @@ export default function Addtraining(props) {
                 <TextField autoFocus fullWidth margin='dense' name='activity' value={training.activity} label='Activity: '
                 onChange={e => handleChange(e)}
                 />
-                 <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <DateTimePicker label='Date: ' value={training.date} onChange={handleDateChange}
-                    variant='inline' ampm={false} helperText={''} format='DD.MM.YYYY, HH:mm' />
-                </MuiPickersUtilsProvider>
-{/*                  <TextField autoFocus fullWidth margin='dense' type='datetime-local' name='date' InputLabelProps={{shrink: true}}
+                <TextField autoFocus fullWidth margin='dense' type='datetime-local' name='date' InputLabelProps={{shrink: true}}
                 value={training.date} label='Date: ' onChange={e => handleChange(e)}
-                />  */}
+                />  
                 <TextField autoFocus fullWidth margin='dense' name='duration' value={training.duration} label='Duration: '
                 onChange={e => handleChange(e)}
                 />

@@ -46,9 +46,11 @@ const Customers = () => {
     }
 
     const deleteCustomer = (link) => {
-        fetch(link, {method: 'DELETE'})
-    .then(res => fetchCustomers())
-    .catch(err => console.error(err))
+        if (window.confirm("Are you sure you want to delete this customer?")) {
+            fetch(link, {method: 'DELETE'})
+            .then(res => fetchCustomers())
+            .catch(err => console.error(err))
+        }
     }
 
     const newTraining = (training) => {

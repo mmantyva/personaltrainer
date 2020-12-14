@@ -24,9 +24,11 @@ const Trainings = () => {
     }
 
     const deleteTraining = id => {
-        fetch(api_url + id, {method: 'DELETE'})
-        .then(res => fetchTrainings())
-        .catch(err => console.error(err))
+        if (window.confirm("Are you sure you want to delete this training?")) {
+            fetch(api_url + id, {method: 'DELETE'})
+            .then(res => fetchTrainings())
+            .catch(err => console.error(err))
+        }
     }
 
     const caseInsensitive = ({id, value}, row) =>
